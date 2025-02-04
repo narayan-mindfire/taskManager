@@ -1,74 +1,96 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import {
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { useState } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import TaskCard from "@/components/TaskCard";
+import DataModal from "@/components/DataModal";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-
-export default function HomeScreen() {
+const index = () => {
+  interface TaskInterface {
+    id: number;
+    title: string;
+    is_complete: boolean;
+  }
+  const [taskList, setTaskList] = useState<TaskInterface[]>([
+    { id: 1, title: "task1", is_complete: false },
+    // { id: 2, title: "task2", is_complete: true },
+    // { id: 3, title: "task3", is_complete: true },
+    // { id: 4, title: "task4", is_complete: false },
+    // { id: 5, title: "task5", is_complete: true },
+    // { id: 6, title: "task6", is_complete: true },
+    // { id: 7, title: "task7", is_complete: true },
+    // { id: 8, title: "task8", is_complete: true },
+    // { id: 9, title: "task9", is_complete: true },
+    // { id: 10, title: "task10", is_complete: true },
+  ]);
+  // const [task, setTask] = useState<TaskInterface>();
+  const [modalVisible, setModalVisible] = useState(false);
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.safearea}>
+        <View style={styles.container}>
+          <DataModal
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+          />
+          <View style={styles.heading}>
+            <Text style={styles.headtext}>
+              TaskManager - create and complete!
+            </Text>
+          </View>
+          <View style={styles.taskList}>
+            <FlatList
+              data={taskList}
+              contentContainerStyle={{ alignItems: "center" }}
+              renderItem={({ item }) => (
+                <TaskCard title={item.title} is_complete={item.is_complete} />
+              )}
+            />
+          </View>
+          <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+            <Text style={styles.addicon}>{modalVisible ? "" : "⨁"}</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
-}
+};
+
+export default index;
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  safearea: {
+    flex: 1,
+    // backgroundColor: "gray",
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  taskList: {
+    height: 400,
+    width: "100%",
+  },
+
+  heading: {
+    height: 100,
+    justifyContent: "center",
+  },
+  headtext: {
+    fontSize: 22,
+    fontWeight: "700",
+    textAlign: "center",
+  },
+  addicon: {
+    fontSize: 42,
+    fontWeight: "bold",
   },
 });
