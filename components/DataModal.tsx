@@ -3,22 +3,46 @@ import {
   Text,
   View,
   Modal,
-  Alert,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+
 interface ModalData {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
+  addTask: (title: string) => void;
 }
-const DataModal = ({ modalVisible, setModalVisible }: ModalData) => {
+
+const DataModal = ({ modalVisible, setModalVisible, addTask }: ModalData) => {
+  const [title, setTitle] = useState("");
+
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible}>
       <View style={styles.modalcontainer}>
         <View style={styles.modalstyle}>
-          <Text>hi this is a modal</Text>
-          <TouchableOpacity onPress={() => setModalVisible(false)}>
-            <Text style={styles.rmbtn}>ⓧ</Text>
+          <TouchableOpacity
+            onPress={() => setModalVisible(false)}
+            style={styles.closeButton}
+          >
+            <Text style={styles.closeIcon}>ⓧ</Text>
+          </TouchableOpacity>
+          <Text style={styles.modalTitle}>Add a New Task</Text>
+          <TextInput
+            style={styles.inpstyle}
+            placeholder="Enter task name"
+            value={title}
+            onChangeText={(text) => setTitle(text)}
+          />
+
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => {
+              addTask(title);
+              setModalVisible(false);
+            }}
+          >
+            <Text style={styles.addButtonText}>Add Task</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -33,17 +57,53 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
   },
   modalstyle: {
-    height: 300,
-    width: 300,
-    backgroundColor: "yellow",
-    justifyContent: "center",
+    width: 320,
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 15,
+    alignItems: "center",
+    elevation: 5, // Shadow effect for Android
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    padding: 5,
+  },
+  closeIcon: {
+    fontSize: 20,
+    color: "gray",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 15,
+  },
+  inpstyle: {
+    width: "100%",
+    height: 40,
+    backgroundColor: "#F3F3F3",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginBottom: 15,
+  },
+  addButton: {
+    marginTop: 10,
+    width: "100%",
+    backgroundColor: "blue",
+    padding: 10,
+    borderRadius: 8,
     alignItems: "center",
   },
-  rmbtn: {
-    marginTop: 30,
-    fontSize: 32,
+  addButtonText: {
+    color: "white",
+    fontWeight: "bold",
   },
 });

@@ -2,22 +2,35 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 
 interface TaskData {
+  id: number;
   title: string;
   is_complete: boolean;
+  toggleCheck: (taskId: number) => void;
+  deleteTask: (taskId: number) => void;
+  editTask: (taskId: number) => void;
 }
-const TaskCard = ({ title, is_complete }: TaskData) => {
+const TaskCard = ({
+  id,
+  title,
+  is_complete,
+  toggleCheck,
+  deleteTask,
+  editTask,
+}: TaskData) => {
   return (
     <View style={styles.box}>
       <View style={styles.titleBox}>
         <Text style={styles.title}>{title}</Text>
       </View>
-      <View style={styles.checkbox}>
-        <Text style={styles.checkIcon}>{is_complete ? "✅" : "❌"}</Text>
-      </View>
+      <TouchableOpacity onPress={() => toggleCheck(id)}>
+        <View style={styles.checkbox}>
+          <Text style={styles.checkIcon}>{is_complete ? "✅" : "❌"}</Text>
+        </View>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.editbox}>
         <Text style={styles.opt}>edit</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.deletebox}>
+      <TouchableOpacity style={styles.deletebox} onPress={() => deleteTask(id)}>
         <Text style={styles.opt}>delete</Text>
       </TouchableOpacity>
     </View>
@@ -45,7 +58,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
-    padding: 5,
+    // padding: 5,
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 20,
   },
   title: {
     fontSize: 16,

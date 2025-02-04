@@ -17,20 +17,30 @@ const index = () => {
     title: string;
     is_complete: boolean;
   }
-  const [taskList, setTaskList] = useState<TaskInterface[]>([
-    { id: 1, title: "task1", is_complete: false },
-    // { id: 2, title: "task2", is_complete: true },
-    // { id: 3, title: "task3", is_complete: true },
-    // { id: 4, title: "task4", is_complete: false },
-    // { id: 5, title: "task5", is_complete: true },
-    // { id: 6, title: "task6", is_complete: true },
-    // { id: 7, title: "task7", is_complete: true },
-    // { id: 8, title: "task8", is_complete: true },
-    // { id: 9, title: "task9", is_complete: true },
-    // { id: 10, title: "task10", is_complete: true },
-  ]);
-  // const [task, setTask] = useState<TaskInterface>();
+  const [taskList, setTaskList] = useState<TaskInterface[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
+  function addTask(inpTitle: string) {
+    let newTask: TaskInterface = {
+      id: Date.now(),
+      title: inpTitle,
+      is_complete: false,
+    };
+    setTaskList([...taskList, newTask]);
+  }
+
+  function toggleCheck(taskId: number) {
+    setTaskList((prevList) =>
+      prevList.map((task) =>
+        task.id === taskId ? { ...task, is_complete: !task.is_complete } : task
+      )
+    );
+  }
+  function deleteTask(taskId: number) {
+    setTaskList(taskList.filter((task) => task.id !== taskId));
+  }
+
+  function editTask(taskId: number) {}
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.safearea}>
@@ -38,6 +48,7 @@ const index = () => {
           <DataModal
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
+            addTask={addTask}
           />
           <View style={styles.heading}>
             <Text style={styles.headtext}>
@@ -49,11 +60,22 @@ const index = () => {
               data={taskList}
               contentContainerStyle={{ alignItems: "center" }}
               renderItem={({ item }) => (
-                <TaskCard title={item.title} is_complete={item.is_complete} />
+                <TaskCard
+                  id={item.id}
+                  title={item.title}
+                  is_complete={item.is_complete}
+                  toggleCheck={toggleCheck}
+                  deleteTask={deleteTask}
+                  editTask={editTask}
+                />
               )}
             />
           </View>
-          <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+          <TouchableOpacity
+            onPress={() => {
+              setModalVisible(true);
+            }}
+          >
             <Text style={styles.addicon}>{modalVisible ? "" : "⨁"}</Text>
           </TouchableOpacity>
         </View>
