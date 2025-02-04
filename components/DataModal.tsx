@@ -40,6 +40,7 @@ const DataModal = ({ modalVisible, setModalVisible, addTask }: ModalData) => {
             onPress={() => {
               addTask(title);
               setModalVisible(false);
+              setTitle("");
             }}
           >
             <Text style={styles.addButtonText}>Add Task</Text>
@@ -65,11 +66,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 15,
     alignItems: "center",
-    elevation: 5, // Shadow effect for Android
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
   },
   closeButton: {
     position: "absolute",
@@ -89,7 +85,7 @@ const styles = StyleSheet.create({
   inpstyle: {
     width: "100%",
     height: 40,
-    backgroundColor: "#F3F3F3",
+    backgroundColor: "#B4B4B4",
     borderRadius: 8,
     paddingHorizontal: 10,
     marginBottom: 15,
