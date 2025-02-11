@@ -59,6 +59,7 @@ const index = () => {
             <FlatList
               data={taskList}
               contentContainerStyle={{ alignItems: "center" }}
+              keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => (
                 <TaskCard
                   id={item.id}
